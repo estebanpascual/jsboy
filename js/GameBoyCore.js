@@ -5802,6 +5802,11 @@ class GameBoyCore {
 	}
 	
 }
+
+
+
+
+
 GameBoyCore.prototype.GBBOOTROM = [		//GB BOOT ROM
 	//Add 256 byte boot rom here if you are going to use it.
 ];

@@ -28,8 +28,8 @@ function start(canvas, ROM) {
 	run();
 }
 function run() {
-	if (GameBoyEmulatorInitialized()) {
-		if (!GameBoyEmulatorPlaying()) {
+	if (isGameBoyEmulatorInitialized()) {
+		if (!isGameBoyEmulatorPlaying()) {
 			gameboy.stopEmulator &= 1;
 			cout("Starting the iterator.", 0);
 			var dateObj = new Date();
@@ -50,8 +50,8 @@ function run() {
 	}
 }
 function pause() {
-	if (GameBoyEmulatorInitialized()) {
-		if (GameBoyEmulatorPlaying()) {
+	if (isGameBoyEmulatorInitialized()) {
+		if (isGameBoyEmulatorPlaying()) {
 			autoSave();
 			clearLastEmulation();
 		}
@@ -64,7 +64,7 @@ function pause() {
 	}
 }
 function clearLastEmulation() {
-	if (GameBoyEmulatorInitialized() && GameBoyEmulatorPlaying()) {
+	if (isGameBoyEmulatorInitialized() && isGameBoyEmulatorPlaying()) {
 		clearInterval(gbRunInterval);
 		gameboy.stopEmulator |= 2;
 		cout("The previous emulation has been cleared.", 0);
@@ -74,7 +74,7 @@ function clearLastEmulation() {
 	}
 }
 function save() {
-	if (GameBoyEmulatorInitialized()) {
+	if (isGameBoyEmulatorInitialized()) {
 		var state_suffix = 0;
 		while (findValue("FREEZE_" + gameboy.name + "_" + state_suffix) != null) {
 			state_suffix++;
@@ -86,7 +86,7 @@ function save() {
 	}
 }
 function saveSRAM() {
-	if (GameBoyEmulatorInitialized()) {
+	if (isGameBoyEmulatorInitialized()) {
 		if (gameboy.cBATT) {
 			try {
 				var sram = gameboy.saveSRAMState();
@@ -117,7 +117,7 @@ function saveSRAM() {
 	}
 }
 function saveRTC() {	//Execute this when SRAM is being saved as well.
-	if (GameBoyEmulatorInitialized()) {
+	if (isGameBoyEmulatorInitialized()) {
 		if (gameboy.cTIMER) {
 			try {
 				cout("Saving the RTC...", 0);
@@ -133,7 +133,7 @@ function saveRTC() {	//Execute this when SRAM is being saved as well.
 	}
 }
 function autoSave() {
-	if (GameBoyEmulatorInitialized()) {
+	if (isGameBoyEmulatorInitialized()) {
 		cout("Automatically saving the SRAM.", 0);
 		saveSRAM();
 		saveRTC();
@@ -175,7 +175,7 @@ function openRTC(filename) {
 	return [];
 }
 function saveState(filename) {
-	if (GameBoyEmulatorInitialized()) {
+	if (isGameBoyEmulatorInitialized()) {
 		try {
 			setValue(filename, gameboy.saveState());
 			cout("Saved the current state as: " + filename, 0);
@@ -357,31 +357,31 @@ function matchKey(key) {	//Maps a keyboard key to a gameboy key.
 	}
 	return -1;
 }
-function GameBoyEmulatorInitialized() {
+function isGameBoyEmulatorInitialized() {
 	return (typeof gameboy == "object" && gameboy != null);
 }
-function GameBoyEmulatorPlaying() {
+function isGameBoyEmulatorPlaying() {
 	return ((gameboy.stopEmulator & 2) == 0);
 }
-function GameBoyKeyDown(key) {
-	if (GameBoyEmulatorInitialized() && GameBoyEmulatorPlaying()) {
-		GameBoyJoyPadEvent(matchKey(key), true);
+function sendGameBoyKeyDown(key) {
+	if (isGameBoyEmulatorInitialized() && isGameBoyEmulatorPlaying()) {
+		sendGameBoyJoyPadEvent(matchKey(key), true);
 	}
 }
-function GameBoyJoyPadEvent(keycode, down) {
-	if (GameBoyEmulatorInitialized() && GameBoyEmulatorPlaying()) {
+function sendGameBoyJoyPadEvent(keycode, down) {
+	if (isGameBoyEmulatorInitialized() && isGameBoyEmulatorPlaying()) {
 		if (keycode >= 0 && keycode < 8) {
 			gameboy.JoyPadEvent(keycode, down);
 		}
 	}
 }
-function GameBoyKeyUp(key) {
-	if (GameBoyEmulatorInitialized() && GameBoyEmulatorPlaying()) {
-		GameBoyJoyPadEvent(matchKey(key), false);
+function sendGameBoyKeyUp(key) {
+	if (isGameBoyEmulatorInitialized() && isGameBoyEmulatorPlaying()) {
+		sendGameBoyJoyPadEvent(matchKey(key), false);
 	}
 }
-function GameBoyGyroSignalHandler(e) {
-	if (GameBoyEmulatorInitialized() && GameBoyEmulatorPlaying()) {
+function gameBoyGyroSignalHandler(e) {
+	if (isGameBoyEmulatorInitialized() && isGameBoyEmulatorPlaying()) {
 		if (e.gamma || e.beta) {
 			gameboy.GyroEvent(e.gamma * Math.PI / 180, e.beta * Math.PI / 180);
 		}
@@ -396,14 +396,14 @@ function GameBoyGyroSignalHandler(e) {
 }
 //The emulator will call this to sort out the canvas properties for (re)initialization.
 function initNewCanvas() {
-	if (GameBoyEmulatorInitialized()) {
+	if (isGameBoyEmulatorInitialized()) {
 		gameboy.canvas.width = gameboy.canvas.clientWidth;
 		gameboy.canvas.height = gameboy.canvas.clientHeight;
 	}
 }
 //Call this when resizing the canvas:
 function initNewCanvasSize() {
-	if (GameBoyEmulatorInitialized()) {
+	if (isGameBoyEmulatorInitialized()) {
 		if (!settings[12]) {
 			if (gameboy.onscreenWidth != 160 || gameboy.onscreenHeight != 144) {
 				gameboy.initLCD();
