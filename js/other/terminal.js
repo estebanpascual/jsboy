@@ -7,15 +7,16 @@ function cout(message, colorIndex) {
 			case -1:
 			case 0:
 				lineout.className = "white";
-				console.log('cout', message);
+				console.log('COUT>', message);
 				break;
 			case 1:
 				lineout.className = "yellow";
-				console.warn('cout', message);
+				console.warn('COUT>', message);
 				break;
 			case 2:
 				lineout.className = "red";
-				console.error('cout', message);
+				console.error('COUT>', message);
+				debugger;
 		}
 		terminal_output.appendChild(lineout);
 		terminal_output.appendChild(document.createElement('br'));
