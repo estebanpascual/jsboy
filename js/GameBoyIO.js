@@ -156,7 +156,8 @@ function openSRAM(filename) {
 	catch (error) {
 		cout("Could not open the  SRAM of the saved emulation state.", 2);
 	}
-	return [];
+	return []
+	
 }
 function openRTC(filename) {
 	try {
