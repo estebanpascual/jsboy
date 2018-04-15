@@ -18,7 +18,7 @@ function windowingInitialize() {
 	windowStacks[1] = windowCreate("terminal", false);
 	windowStacks[2] = windowCreate("about", false);
 	windowStacks[3] = windowCreate("settings", false);
-	windowStacks[4] = windowCreate("input_select", false);
+	windowStacks[4] = windowCreate("input_select", true);
 	windowStacks[5] = windowCreate("instructions", false);
 	windowStacks[6] = windowCreate("local_storage_popup", false);
 	windowStacks[7] = windowCreate("local_storage_listing", false);
@@ -132,13 +132,10 @@ function registerGUIEvents() {
 						binaryHandle.onload = function () {
 							if (this.readyState == 2) {
 								cout("file loaded.", 0);
-								try {
+								
 									initPlayer();
 									start(mainCanvas, this.result);
-								}
-								catch (error) {
-									alert(error.message + " file: " + error.fileName + " line: " + error.lineNumber);
-								}
+								
 							}
 							else {
 								cout("loading file, please wait...", 0);
@@ -190,6 +187,7 @@ function registerGUIEvents() {
 								}
 								catch (error) {
 									alert(error.message + " file: " + error.fileName + " line: " + error.lineNumber);
+									throw error;
 								}
 							}
 							else {
@@ -226,7 +224,7 @@ function registerGUIEvents() {
 	});
 	addEvent("click", document.getElementById("restart_cpu_clicker"), function () {
 		if (GameBoyEmulatorInitialized()) {
-			try {
+			// try {
 				if (!gameboy.fromSaveState) {
 					initPlayer();
 					start(mainCanvas, gameboy.getROMImage());
@@ -235,10 +233,10 @@ function registerGUIEvents() {
 					initPlayer();
 					openState(gameboy.savedStateFileName, mainCanvas);
 				}
-			}
-			catch (error) {
-				alert(error.message + " file: " + error.fileName + " line: " + error.lineNumber);
-			}
+			// }
+			// catch (error) {
+			// 	alert(error.message + " file: " + error.fileName + " line: " + error.lineNumber);
+			// }
 		}
 		else {
 			cout("Could not restart, as a previous emulation session could not be found.", 1);
