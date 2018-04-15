@@ -15,12 +15,15 @@ class GameBoyCore {
 		this.canvas = canvas; //Canvas DOM object for drawing out the graphics to.
 		this.drawContext = null; // LCD Context
 		this.ROMImage = ROMImage; //The game's ROM.
+		
 		//CPU Registers and Flags:
 		this.registerA = 0x01; //Register A (Accumulator)
+
 		this.FZero = true; //Register F  - Result was zero
 		this.FSubtract = false; //Register F  - Subtraction was executed
 		this.FHalfCarry = true; //Register F  - Half carry or half borrow
 		this.FCarry = true; //Register F  - Carry or borrow
+
 		this.registerB = 0x00; //Register B
 		this.registerC = 0x13; //Register C
 		this.registerD = 0x00; //Register D
@@ -28,6 +31,8 @@ class GameBoyCore {
 		this.registersHL = 0x014D; //Registers H and L combined
 		this.stackPointer = 0xFFFE; //Stack Pointer
 		this.programCounter = 0x0100; //Program Counter
+
+
 		//Some CPU Emulation State Variables:
 		this.CPUCyclesTotal = 0; //Relative CPU clocking to speed set, rounded appropriately.
 		this.CPUCyclesTotalBase = 0; //Relative CPU clocking to speed set base.
@@ -180,10 +185,8 @@ class GameBoyCore {
 		this.serialShiftTimer = 0; //Serial Transfer Shift Timer
 		this.serialShiftTimerAllocated = 0; //Serial Transfer Shift Timer Refill
 		this.IRQEnableDelay = 0; //Are the interrupts on queue to be enabled?
-		var dateVar = new Date();
-		this.lastIteration = dateVar.getTime(); //The last time we iterated the main loop.
-		dateVar = new Date();
-		this.firstIteration = dateVar.getTime();
+		this.lastIteration = Date.now(); //The last time we iterated the main loop.
+		this.firstIteration = Date.now();
 		this.iterations = 0;
 		this.actualScanLine = 0; //Actual scan line...
 		this.lastUnrenderedLine = 0; //Last rendered scan line...
@@ -2550,8 +2553,8 @@ class GameBoyCore {
 	}
 	clockUpdate() {
 		if (this.cTIMER) {
-			var dateObj = new Date();
-			var newTime = dateObj.getTime();
+			
+			var newTime = Date.now();
 			var timeElapsed = newTime - this.lastIteration; //Get the numnber of milliseconds since this last executed.
 			this.lastIteration = newTime;
 			if (this.cTIMER && !this.RTCHALT) {
